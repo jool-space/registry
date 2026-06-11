@@ -3,3 +3,4 @@ uuid = "83032df4-3e46-442b-a558-ff2587b83e9a"
 repo = "https://registry.jool.space"
 
 [packages]
+74738147-8e3d-4f44-a0a4-d3d1342265a2 = { name = "TransformerKernels", path = "T/TransformerKernels" }
