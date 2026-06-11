@@ -9,9 +9,9 @@ on:
   workflow_call:
     inputs:
       bump:
-        description: patch | minor | major | x.y.z | current
+        description: current | patch | minor | major | x.y.z
         type: string
-        default: patch
+        default: current
     secrets:
       REGISTRY_DEPLOY_KEY:
         description: SSH deploy key with write access to jool-space/registry
