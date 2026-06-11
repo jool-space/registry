@@ -102,10 +102,16 @@ if !registered
     push_registry(registry)
 end
 
-# Step 3: tag.
+# Step 3: tag. GITHUB_TOKEN cannot push refs whose commit touches workflow
+# files (bites first releases tagging a CI-setup commit); fall back to
+# creating the ref through the API, which has been more permissive.
 if isempty(shellout(`git ls-remote origin $("refs/tags/$tag")`))
     run(`git tag -a $tag -m $tag $commit`)
-    run(`git push origin $tag`)
+    if !success(run(ignorestatus(`git push origin $tag`)))
+        @warn "tag push rejected; creating the ref via the API"
+        repo = ENV["GITHUB_REPOSITORY"]
+        run(`gh api repos/$repo/git/refs -f ref=$("refs/tags/$tag") -f sha=$commit`)
+    end
 else
     @info "tag $tag already on origin; skipping"
 end

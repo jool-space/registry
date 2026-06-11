@@ -48,6 +48,7 @@ jobs:
         env:
           BUMP: ${{ inputs.bump }}
           REGISTRY_PATH: ../registry
+          GH_TOKEN: ${{ github.token }}
       - name: GitHub release
         run: |
           gh release view "v$VERSION" -R "$GH_REPO" >/dev/null 2>&1 ||
