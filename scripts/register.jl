@@ -28,6 +28,17 @@ function set_version!(path::AbstractString, v::VersionNumber)
     write(path, join(lines, "\n") * "\n")
 end
 
+# Another package may register concurrently; rebase and retry the push.
+function push_registry(registry::AbstractString)
+    branch = shellout(`git -C $registry rev-parse --abbrev-ref HEAD`)
+    for attempt in 1:5
+        success(run(ignorestatus(`git -C $registry push origin $branch`))) && return
+        @warn "registry push rejected (attempt $attempt); rebasing"
+        run(`git -C $registry pull --rebase origin $branch`)
+    end
+    error("could not push registry commit after 5 attempts")
+end
+
 project = TOML.parsefile("Project.toml")
 name = project["name"]
 uuid = project["uuid"]
@@ -77,18 +88,7 @@ if entry !== nothing
 end
 if !registered
     LocalRegistry.register(pwd(); registry, commit=true, push=false)
-    # Another package may register concurrently; rebase and retry the push.
-    registry_branch = shellout(`git -C $registry rev-parse --abbrev-ref HEAD`)
-    pushed = false
-    for attempt in 1:5
-        if success(run(ignorestatus(`git -C $registry push origin $registry_branch`)))
-            pushed = true
-            break
-        end
-        @warn "registry push rejected (attempt $attempt); rebasing"
-        run(`git -C $registry pull --rebase origin $registry_branch`)
-    end
-    pushed || error("could not push registry commit after 5 attempts")
+    push_registry(registry)
 end
 
 # Step 3: tag.

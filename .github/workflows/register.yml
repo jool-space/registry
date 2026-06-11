@@ -27,16 +27,16 @@ jobs:
   register:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           path: package
           fetch-depth: 0
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: jool-space/registry
           ssh-key: ${{ secrets.REGISTRY_DEPLOY_KEY }}
           path: registry
-      - uses: julia-actions/setup-julia@v2
+      - uses: julia-actions/setup-julia@v3
         with:
           version: '1'
       - name: Register and tag
