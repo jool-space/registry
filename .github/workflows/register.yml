@@ -1,0 +1,58 @@
+# Reusable workflow: register the calling package into registry.jool.space,
+# tag the release commit, and create a GitHub release. Called from package
+# repos; see examples/release.yml for the caller.
+#
+# Every step is skip-if-already-done, so re-running a failed run heals it.
+name: Register
+
+on:
+  workflow_call:
+    inputs:
+      bump:
+        description: patch | minor | major | x.y.z | current
+        type: string
+        default: patch
+    secrets:
+      REGISTRY_DEPLOY_KEY:
+        description: SSH deploy key with write access to jool-space/registry
+        required: true
+
+concurrency:
+  group: register-${{ github.repository }}
+
+permissions:
+  contents: write
+
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: package
+          fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          repository: jool-space/registry
+          ssh-key: ${{ secrets.REGISTRY_DEPLOY_KEY }}
+          path: registry
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: '1'
+      - name: Register and tag
+        id: reg
+        working-directory: package
+        run: |
+          julia --project=../registry/scripts -e 'using Pkg; Pkg.instantiate()'
+          julia --project=../registry/scripts ../registry/scripts/register.jl
+        env:
+          BUMP: ${{ inputs.bump }}
+          REGISTRY_PATH: ../registry
+      - name: GitHub release
+        run: |
+          gh release view "v$VERSION" -R "$GH_REPO" >/dev/null 2>&1 ||
+            gh release create "v$VERSION" -R "$GH_REPO" --title "v$VERSION" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ steps.reg.outputs.version }}

@@ -1,0 +1,36 @@
+# Mark a registered version as yanked: the resolver will no longer pick it,
+# but existing manifests that pin it keep working.
+name: Yank
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Package name
+        required: true
+        type: string
+      version:
+        description: Version to yank (x.y.z)
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  yank:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: '1'
+      - run: julia scripts/yank.jl
+        env:
+          PACKAGE: ${{ inputs.package }}
+          VERSION: ${{ inputs.version }}
+      - run: |
+          git config user.name jool-bot
+          git config user.email bot@jool.space
+          git commit -am "Yank ${{ inputs.package }} v${{ inputs.version }}"
+          git push

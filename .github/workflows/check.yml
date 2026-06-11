@@ -1,0 +1,25 @@
+# Registry consistency check: structural validation plus a real
+# Pkg.Registry.add into a scratch depot, so anything Pkg would choke on
+# fails here first.
+name: Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  consistency:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: '1'
+      - run: julia scripts/check.jl
+      - name: Pkg can add the registry
+        run: |
+          JULIA_DEPOT_PATH="$RUNNER_TEMP/depot" julia -e '
+            using Pkg
+            Pkg.Registry.add(RegistrySpec(path=pwd()))
+            Pkg.Registry.status()'
