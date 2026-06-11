@@ -16,6 +16,12 @@ on:
       REGISTRY_DEPLOY_KEY:
         description: SSH deploy key with write access to jool-space/registry
         required: true
+      JOOL_BOT_TOKEN:
+        description: >-
+          PAT of the jool-bot machine account (repo + workflow scopes).
+          Pushes made with GITHUB_TOKEN don't trigger other workflows, so
+          without this the bump commit and tag get no CI or docs build.
+        required: false
 
 concurrency:
   group: register-${{ github.repository }}
@@ -31,6 +37,7 @@ jobs:
         with:
           path: package
           fetch-depth: 0
+          token: ${{ secrets.JOOL_BOT_TOKEN || github.token }}
       - uses: actions/checkout@v6
         with:
           repository: jool-space/registry
@@ -54,6 +61,6 @@ jobs:
           gh release view "v$VERSION" -R "$GH_REPO" >/dev/null 2>&1 ||
             gh release create "v$VERSION" -R "$GH_REPO" --title "v$VERSION" --generate-notes
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.JOOL_BOT_TOKEN || github.token }}
           GH_REPO: ${{ github.repository }}
           VERSION: ${{ steps.reg.outputs.version }}
