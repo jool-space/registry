@@ -80,9 +80,20 @@ if entry !== nothing
     versions = TOML.parsefile(joinpath(registry, entry["path"], "Versions.toml"))
     if haskey(versions, string(version))
         registered_tree = versions[string(version)]["git-tree-sha1"]
-        registered_tree == tree ||
-            error("$name $tag is registered with tree $registered_tree, but HEAD has $tree")
-        @info "$name $tag already registered; skipping"
+        if registered_tree == tree
+            @info "$name $tag already registered; skipping"
+        else
+            # Registered from an earlier commit (e.g. only CI files changed
+            # since a partially failed run). The tag must point at the
+            # commit the registry describes, so find it in the history.
+            history = split(shellout(`git log --format=$("%H %T") HEAD`), '\n')
+            i = findfirst(l -> endswith(l, registered_tree), history)
+            i === nothing && error(
+                "$name $tag is registered with tree $registered_tree, " *
+                "which is not in this branch's history (HEAD tree: $tree)")
+            commit = first(split(history[i]))
+            @info "$name $tag was registered from commit $commit; tagging that"
+        end
         registered = true
     end
 end
