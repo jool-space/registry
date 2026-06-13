@@ -1,15 +1,11 @@
-# registry.jool.space
+# jool.space package registry
 
-Julia package registry for [jool.space](https://github.com/jool-space) — Joolian Computing Infrastructure.
-
-## Using the registry
+Julia package registry for [jool.space](https://github.com/jool-space). Install with:
 
 ```julia
 using Pkg
-Pkg.Registry.add(url = "https://registry.jool.space")
+Registry.add(url="https://registry.jool.space")
 ```
-
-Packages here resolve alongside [General](https://github.com/JuliaRegistries/General); keep both registries installed.
 
 ## Releasing a package
 
