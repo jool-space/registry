@@ -4,3 +4,4 @@ repo = "https://registry.jool.space"
 
 [packages]
 74738147-8e3d-4f44-a0a4-d3d1342265a2 = { name = "TransformerKernels", path = "T/TransformerKernels" }
+e9ed47d0-8750-4009-b91d-3679011a846b = { name = "Tylo", path = "T/Tylo" }
