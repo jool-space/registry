@@ -1,3 +1,6 @@
 [0]
 Microfloats = "0.2.3-0.2"
 NNlib = "0.9"
+
+["0.1.1-0"]
+BitPacking = "0.2"

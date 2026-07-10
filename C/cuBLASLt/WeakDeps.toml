@@ -1,3 +1,6 @@
 [0]
 Microfloats = "31c70f10-a750-4521-b13c-797315ae2933"
 NNlib = "872c559c-99b0-510c-b3b7-b6c96a88d5cd"
+
+["0.1.1-0"]
+BitPacking = "b58c8408-13c4-4787-8733-7038ae624acf"
