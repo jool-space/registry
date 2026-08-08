@@ -4,6 +4,7 @@ repo = "https://registry.jool.space"
 
 [packages]
 0573b79a-4d3c-4b70-9b60-9925c78b8eda = { name = "Bop", path = "B/Bop" }
+1a9757c6-0d28-4499-b7bb-62d38933090b = { name = "Microscaling", path = "M/Microscaling" }
 448fee3d-7d89-4b6e-8554-2e2b5f03afa7 = { name = "cuBLASLt", path = "C/cuBLASLt" }
 4d414b72-cacd-4c1f-bb87-6585853948d5 = { name = "Pol", path = "P/Pol" }
 74738147-8e3d-4f44-a0a4-d3d1342265a2 = { name = "TransformerKernels", path = "T/TransformerKernels" }
