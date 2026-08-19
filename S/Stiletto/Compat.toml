@@ -1,0 +1,6 @@
+[0]
+CUDACore = "6.3.0-6"
+CompilerCaching = "0.3.1-0.4"
+Statistics = "1.11.1-1"
+cuDNN = "6.3.0-6"
+julia = "1.11.0-1"

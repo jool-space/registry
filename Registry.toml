@@ -8,4 +8,5 @@ repo = "https://registry.jool.space"
 448fee3d-7d89-4b6e-8554-2e2b5f03afa7 = { name = "cuBLASLt", path = "C/cuBLASLt" }
 4d414b72-cacd-4c1f-bb87-6585853948d5 = { name = "Pol", path = "P/Pol" }
 74738147-8e3d-4f44-a0a4-d3d1342265a2 = { name = "TransformerKernels", path = "T/TransformerKernels" }
+cd7b33ae-7fac-45d2-9517-7fd8367982fc = { name = "Stiletto", path = "S/Stiletto" }
 e9ed47d0-8750-4009-b91d-3679011a846b = { name = "Tylo", path = "T/Tylo" }
