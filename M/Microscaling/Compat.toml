@@ -10,7 +10,12 @@ Microfloats = "0.2.3-0.2"
 Rewrap = "0.1.8-0.1"
 
 ["0.1.2-0"]
-BitPacking = "0.2.5-0.2"
 Microfloats = "0.2.5-0.2"
 Pol = "0.2"
 Rewrap = "0.1.9-0.1"
+
+["0.1.2-0.1.5"]
+BitPacking = "0.2.5-0.2"
+
+["0.1.6-0"]
+BitPacking = "0.2.5-0.3"
